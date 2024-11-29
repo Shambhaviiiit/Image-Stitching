@@ -32,12 +32,16 @@ def myfun(x, pts2, tmp_line2):
     
     return np.array([term1, term2])
 
-def calc_homo_point_line(pts1, pts2, line1, line2):
+def calc_homo_point_line(pts1_org, pts2_org, line1, line2):
     """
     Estimate homography based on feature matches and line segment matches.
     """
+    pts1 = pts1_org.T
+    pts2 = pts2_org.T
     num_pts = pts1.shape[1]
     num_line = line1.shape[0]
+    print("line shape in calc homo")
+    print(line1.shape)
 
     # Point-centric normalization before SVD w.r.t. dual-feature
     re_line1 = line1.T.reshape(2, 2 * num_line)

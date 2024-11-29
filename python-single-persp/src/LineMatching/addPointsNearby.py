@@ -12,6 +12,8 @@ def addpointsnearby(lines, pointlist, sublinds, charap):
         # Add character approximation rectangle
         canlines[i]['pleft'], canlines[i]['pright'] = addcharapsrect(lines[sublinds[i]], charap)
 
+    # print("pleft canlines")
+    # print(canlines[0]['pleft'])
     canlines = np.array(canlines)
     return canlines
 
@@ -91,9 +93,9 @@ def addcharapsrect(line, charap):
         p = charap[i]
         if disp2line(p, line) < d2line * linelen and disp2line(p, midline) < d2midline * linelen:
             if sameside(line, p, pg):
-                pright.append([p, i])
+                pright.append([p[0], p[1], i])
             else:
-                pleft.append([p, i])
+                pleft.append([p[0], p[1], i])
     
     return pleft, pright
 

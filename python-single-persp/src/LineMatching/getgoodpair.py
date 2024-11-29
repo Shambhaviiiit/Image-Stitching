@@ -6,7 +6,7 @@ def getgoodpair(plines1, lines2, dist):
     
     ind1 = []
     ind2 = []
-    
+    print("get good pair")
     for i in range(len1):
         for j in range(len2):
             if isclose(plines1[i], lines2[j], dist):
@@ -17,6 +17,7 @@ def getgoodpair(plines1, lines2, dist):
 
 
 def isclose(line1, line2, dist):
+    # print("is close function")
     if (disp2line(line1['point1'], line2) > dist or 
         disp2line(line1['point2'], line2) > dist or 
         disp2line(line2['point1'], line1) > dist or 
@@ -31,12 +32,14 @@ def isclose(line1, line2, dist):
 
 
 def disp2line(point, line):
+    print("disp2line function")
     k = line['k']
     b = line['b']
-    
+    print(k, b)
     if k != float('inf'):
         dis = abs(k * point[0] - point[1] + b) / np.sqrt(k * k + 1)
     else:
         dis = abs(point[0] - line['point1'][0])
     
+    print(dis)
     return dis

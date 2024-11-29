@@ -3,22 +3,36 @@ from src.calcHomo import calcHomo
 
 def linesDelete(line1, line2, pts1, pts2):
     outlier_threshold = 3  # Outlier threshold for projection distance
-    
+    print(pts1.shape)
     # Delete duplicate feature matches
-    h1, indh1 = np.sort(pts1, axis=1)
-    _, indk1 = np.unique(h1, axis=1)
-    matches1 = pts1[:, indh1[indk1]]
-    matches2 = pts2[:, indh1[indk1]]
     
-    h2, indh2 = np.sort(matches2, axis=1)
-    _, indk2 = np.unique(h2, axis=1)
-    matches1 = matches1[:, indh2[indk2]]
-    matches2 = matches2[:, indh2[indk2]]
+    # pts1: (n,2)
+    # matches1: (2, n')
+    indh1 = np.lexsort((pts1[:, 1], pts1[:, 0]))  
+    h1 = pts1[indh1]  # Apply sorting
+    _, indk1 = np.unique(h1, axis=0, return_index=True)  # Find unique rows
+    matches1 = pts1[indh1[indk1], :].T
+    matches2 = pts2[indh1[indk1], :].T
+
+    matches2_T = matches2.T
+    indh2 = np.lexsort((matches2_T[:, 1], matches2_T[:, 0]))
+    h2 = matches2_T[indh2]
+    _, indk2 = np.unique(h2, axis=0, return_index=True)
+    # matches1 = matches1[:, indk2]
+    # matches2 = matches2[:, indk2]
+    matches1 = matches1[:, indh2[indk2]]  # Filter matches1 based on matches2
+    matches2 = matches2[:, indh2[indk2]]  # Filter matches2
+
+    print("matches")
+    print(matches1.shape)
+    print(matches2.shape)
     
     # Calculate homography matrix
     init_H = calcHomo(matches1, matches2)
-    
     num_line = line1.shape[0]
+    
+    print("line input")
+    print(line1.shape)
     
     # Equation for line 1
     abc_line1 = np.array([
