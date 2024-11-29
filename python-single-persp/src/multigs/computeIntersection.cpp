@@ -6,18 +6,20 @@
 namespace py = pybind11;
 
 double intersect(double* x, double* z, int pix, double param) {
+    // std::cout<<"intersect mei\n";
+    // std::cout<<
     // Intersection Kernel - C++ version
-    std::vector<int> symtab(pix, 0);
+    std::vector<int> symtab(pix+1, 0);
     double accum = 0;
 
     // Fill the table
     for (int n = 0; n < static_cast<int>(param); n++) {
-        symtab[static_cast<int>(x[n]) - 1] = 1;
+        symtab[static_cast<int>(x[n])] = 1;
     }
 
     // Intersect and accumulate
     for (int n = 0; n < static_cast<int>(param); n++) {
-        if (symtab[static_cast<int>(z[n]) - 1] == 1) {
+        if (symtab[static_cast<int>(z[n])] == 1) {
             accum++;
         }
     }
@@ -44,14 +46,15 @@ py::array_t<double> compute_intersection(py::array_t<double> A1, py::array_t<dou
     int n2 = buf2.shape[1];
 
     // Correct the shape of K: (n1, n2)
-    py::array_t<double> K({n1, n2});
-    auto bufK = K.request();
+    py::array_t<double> K = py::array_t<double>({n1, n2});
+    py::buffer_info bufK = K.request();
     double* ptrK = static_cast<double*>(bufK.ptr);
-    std::cout<<"LOOP MEI PHASA\n";
     // for (int j = 0; j < n1; j++) {
     //     for (int i = 0; i < n2; i++) {
     //         // Fix indexing: ptrA1 + j * m1 and ptrA2 + i * m2 should be passed correctly
-    //         ptrK[j + i * n1] = intersect(ptrA1 + j * m1, ptrA2 + i * m2, m1, H);
+    //         int temp = intersect(ptrA1 + j * m1, ptrA2 + i * m2, m1, H);
+    //         std::cout<<"temp done\n";
+    //         ptrK[j + i * n1] = temp;
     //     }
     // }
     for (int j = 0; j < n1; j++) {

@@ -30,6 +30,8 @@ def paras(I, points):
 
         llines.append(line)
 
+    llines = np.array(llines)
+
     # Get the interpolated points for the lines
     pointlist = intspoints(llines, imsize)
     

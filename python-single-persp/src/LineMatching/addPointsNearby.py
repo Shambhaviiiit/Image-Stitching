@@ -12,6 +12,8 @@ def addpointsnearby(lines, pointlist, sublinds, charap):
         canlines[i]['intsect1'], canlines[i]['intsect2'] = get2imps(sublinds[i], lines, pointlist)
         # Add character approximation rectangle
         canlines[i]['pleft'], canlines[i]['pright'] = addcharapsrect(lines[sublinds[i]], charap)
+
+    canlines = np.array(canlines)
     return canlines
 
 def get2imps(lind, lines, pointlist):
@@ -34,10 +36,10 @@ def get2imps(lind, lines, pointlist):
     dist2 = np.zeros(n)
     
     for j in range(n):
-        p = pointlist[pinds[j]]['point']
+        p = np.array(pointlist[pinds[j]]['point'])
         points[j, :] = p
-        dist1[j] = np.linalg.norm(p - subline['point1'])
-        dist2[j] = np.linalg.norm(p - subline['point2'])
+        dist1[j] = np.linalg.norm(p - np.array(subline['point1']))
+        dist2[j] = np.linalg.norm(p - np.array(subline['point2']))
     
     d1 = np.min(dist1) if len(dist1) > 0 else np.inf
     id1 = np.argmin(dist1) if len(dist1) > 0 else -1

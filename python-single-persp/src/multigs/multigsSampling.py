@@ -13,9 +13,9 @@ import random
 # Define globally as needed:
 # fitfn, resfn, degenfn, psize, numpar
 
-# compute intersection is implemented by GPT, original is in C
-
 def multigs_sampling(lim, data, M, blksiz):
+    print("multigs sampling function")
+    print(data.shape)
     """
     Perform multi-structure robust fitting with guided sampling.
     
@@ -52,6 +52,8 @@ def multigs_sampling(lim, data, M, blksiz):
     t0 = time.time()
     
     for m in range(M):
+        print("============")
+        print("m value")
         print(m)
         degencnt = 0
         isdegen = True
@@ -149,6 +151,7 @@ def weighted_sampling(n, psize, resinx, win):
 
         # print("selected row:", selected_row.shape)
         # print("resinx shape:", resinx.T.shape)
+        # print("")
         print("win value:", win)
 
         new_w = computeIntersection.compute_intersection(selected_row, resinx.T, win).T
