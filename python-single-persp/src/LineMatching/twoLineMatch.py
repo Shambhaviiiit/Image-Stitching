@@ -106,9 +106,9 @@ def two_line_match(img1, img2, pts1, pts2, parameters):
             plines = projline(F1, lines1)
             # print("plines")
             # print(plines)
-            ind11, ind12 = getgoodpair(plines, lines2, 3)
+            ind11, ind12 = getgoodpair(plines, lines2, 200)
             plines = projline(np.linalg.inv(F1), lines2)
-            ind22, ind21 = getgoodpair(plines, lines1, 3)
+            ind22, ind21 = getgoodpair(plines, lines1, 200)
             print("ind1122")
             print(ind11)
             print(ind22)
@@ -145,8 +145,7 @@ def two_line_match(img1, img2, pts1, pts2, parameters):
             indices = ind2 + ind1 * len2
             # Add v to the corresponding positions in the votecan array
             if np.all(ind2 < len1) and np.all(ind1 < len2):
-                votecan[indices] += v
-            # votecan[ind2 + (ind1 - 1) * len2] += v
+                votecan.flat[indices] = votecan.flat[indices] + v  # Use flat indexing like MATLAB
     
     print("votecan changes")
     print(votecan - votecan_org)
@@ -155,14 +154,18 @@ def two_line_match(img1, img2, pts1, pts2, parameters):
     # print(f"Max difference: {np.max(diff)}")
     # print(f"Min difference: {np.min(diff)}")
 
-    num, ind = np.sort(votecan, axis=None)[::-1], np.argsort(votecan, axis=None)[::-1]
-    num2, ind2 = np.sort(votecan.T, axis=None)[::-1], np.argsort(votecan.T, axis=None)[::-1]
+    num = np.sort(votecan, axis=None)[::-1]
+    ind = np.argsort(votecan, axis=None)[::-1]
+    
+    # Transpose votecan for the second sort (like MATLAB)
+    votecan = votecan.T
+    num2 = np.sort(votecan, axis=None)[::-1]
+    ind2 = np.argsort(votecan, axis=None)[::-1]
     
     k = []
-    print("ind")
-    print(len(ind))
     for i in range(len(ind)):
-        if ind[i] == ind2[ind[i]] and num[i] > 0.7 and num2[ind[i]] > 0.7:
+        # Change threshold to 0.9 to match MATLAB
+        if i == ind2[ind[i]] and num[i] > 0.9 and num2[ind[i]] > 0.9:
             k.append(i)
     
     print("Second k")
@@ -189,5 +192,17 @@ def two_line_match(img1, img2, pts1, pts2, parameters):
     print(linematch2.shape)
 
     linematch1, linematch2 = linesDelete(linematch1, linematch2, pts1, pts2)
+    
+    # After calculating simL and simR
+    print("\nSimilarity matrices statistics:")
+    print(f"simL range: {np.min(simL)} to {np.max(simL)}")
+    print(f"simR range: {np.min(simR)} to {np.max(simR)}")
+    print(f"Number of simL values > 0.95: {np.sum(simL > 0.95)}")
+    print(f"Number of simR values > 0.95: {np.sum(simR > 0.95)}")
+    
+    # After initial k calculation
+    print("\nInitial k pairs:")
+    for idx, pair in enumerate(k):
+        print(f"Pair {idx}: {pair} with similarity: {simL[pair[0], pair[1]]}")
     
     return linematch1, linematch2
