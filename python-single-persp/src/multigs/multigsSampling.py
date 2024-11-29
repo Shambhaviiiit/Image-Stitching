@@ -15,7 +15,6 @@ import random
 
 def multigs_sampling(lim, data, M, blksiz):
     print("multigs sampling function")
-    print(data.shape)
     """
     Perform multi-structure robust fitting with guided sampling.
     
@@ -52,17 +51,11 @@ def multigs_sampling(lim, data, M, blksiz):
     t0 = time.time()
     
     for m in range(M):
-        print("============")
-        print("m value")
-        print(m)
         degencnt = 0
         isdegen = True
         
         while isdegen and degencnt <= 10:
             degencnt += 1
-            # if m < blksiz:
-            #     pinx = np.random.choice(n, psize, replace=False)
-            print(f"N VALUE: {n}")
             if m <= blksiz:
                 if psize > n:
                     pinx = np.random.choice(n, psize, replace=True)  # Allow sampling with replacement
@@ -72,44 +65,30 @@ def multigs_sampling(lim, data, M, blksiz):
             else:
                 pinx = weighted_sampling(n, psize, resinx, win)
                 
-            print("PINX")
-            print(pinx)
             psub = data[:, pinx]
             
             isdegen = homography_degen(psub)
         
-        print("out of while")
         if isdegen:
             warnings.warn("Cannot find a valid p-subset!")
             err = 1
             return par, res, inx, tim, err
         
         # Fit the model on the p-subset
-        print("PSUB: ")
-        print(psub.shape)
         st = homography_fit(psub)
-        print("ST")
-        # print(st[0])
-        # print(st[1])
         
         # Compute residuals
         ds = homography_res(st[0], data)
-        print("returned res")
-        print("DS shapes")
-        print(ds[0].shape)
-        print(ds[1].shape)
         
         # Store results
         par[:, m] = st[0]
         res[:, m] = ds[0].flatten()
-        print("res 1 done")
         inx[:, m] = pinx
         tim[m] = time.time() - t0
         
         if tim[m] >= lim:
             par = par[:, :m + 1]
             res = res[:, :m + 1]
-            print("res 2 in if done")
             inx = inx[:, :m + 1]
             tim = tim[:m + 1]
             break
@@ -118,7 +97,6 @@ def multigs_sampling(lim, data, M, blksiz):
             win = round(0.1 * m)
             resinx = np.argsort(res[:, :m + 1], axis=1)
 
-        print("loop end")
     
     print(f'done ({tim[-1]:.2f}s)')
     return par, res, inx, tim, err
@@ -142,37 +120,17 @@ def weighted_sampling(n, psize, resinx, win):
     pinx[0] = seedinx
     
     w = np.ones(n)
-    # print(win.shape)
     for i in range(1, psize):
-        print("ITERARION")
-        print(i)
-        # print(seedinx)
         selected_row = resinx[seedinx, :].reshape(resinx.shape[1], 1)
 
-        # print("selected row:", selected_row.shape)
-        # print("resinx shape:", resinx.T.shape)
-        # print("")
-        print("win value:", win)
-
         new_w = computeIntersection.compute_intersection(selected_row, resinx.T, win).T
-        print(new_w.shape)
         new_w[seedinx] = 0  # Ensure sampling without replacement
         
-        print("SHAPES")
-        # print("w: ")
-        # print(w.shape)
-        # print("new_w: ")
-        # print(new_w.shape)
         w = w.reshape(w.shape[0], 1)
         w *= new_w
-        # print("done")
         othinx = np.random.choice(n)
         if np.sum(w) > 0:
-            # p=normalize_weights(w)
-            # print(p)
             othinx = random.choices(range(0, n), weights=w, k=1)[0]
-        # else:
-            # pinx[i] = np.random.choice(n)
 
         pinx[i] = othinx
         seedinx = othinx

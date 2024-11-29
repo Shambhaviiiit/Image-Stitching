@@ -4,8 +4,7 @@ from src.LineMatching.getPoints import getpoints
 from src.LineMatching.crossProduct import crossproduct
 
 def addpointsnearby(lines, pointlist, sublinds, charap):
-    print("ADD POINTS NEARBY")
-    print(charap)
+    
     canlines = [lines[i] for i in sublinds]
     for i in range(len(sublinds)):
         # Get intersections
@@ -22,15 +21,10 @@ def get2imps(lind, lines, pointlist):
     p1 = np.zeros((lnum, 2))
     p2 = np.zeros((lnum, 2))
     
-    print("GET 2 IMPS")
-    print(lind)
-    # print(lines.shape)
-    # print(pointlist.shape)
 
     pinds = getpoints(lind, pointlist)
     n = len(pinds)
-    print("AFTER GET POINTS")
-    print(n)
+    
     points = np.zeros((n, 2))
     dist1 = np.zeros(n)
     dist2 = np.zeros(n)
@@ -106,10 +100,6 @@ def addcharapsrect(line, charap):
 def disp2line(point, line):
     k = line['k']
     b = line['b']
-
-    print("DISP2LINE")
-    print(point)
-    print(line)
     
     if k != float('inf'):
         return abs(k * point[0] - point[1] + b) / np.sqrt(k ** 2 + 1)

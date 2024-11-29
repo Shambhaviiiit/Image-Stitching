@@ -17,8 +17,7 @@ def homography_res(H, X):
         H: Reshaped homography matrix.
     """
     # Reshape the homography matrix to 3x3
-    # print("INSIDE RES")
-    # print(H.shape)
+    
     H = np.reshape(H, (3, 3))
     
     # Extract x1 and x2 (homogeneous coordinates)
@@ -36,25 +35,12 @@ def homography_res(H, X):
     Hx1 = hnormalise(Hx1)
     invHx2 = hnormalise(invHx2)
 
-    # print("X1")
-    # print(x1.shape)
-    # print(x2.shape)
-    # print(Hx1.shape)
-    # print(invHx2.shape)
     
     # Calculate the symmetric transfer error (sum of squared differences)
     a1 = (x1 - invHx2)**2
     a2 = (x2 - Hx1)**2
-    print(a1.shape)
-    print(a2.shape)
-    # dist = np.sum(, axis=1) + np.sum(, axis = 1)
-    # dist1 = np.sum((x1 - invHx2)**2)
-    # dist2 = np.sum((x2 - Hx1)**2, axis = 0)
-    # print(dist.shape)
-    # print(dist1.shape)
-    # print(dist2.shape)
     dist = np.sum((a1), axis=0) + np.sum((a2), axis=0)
-    print("sum done")
+
     # Reshape the distance to a column vector
     dist = np.reshape(dist, (n, 1))
     

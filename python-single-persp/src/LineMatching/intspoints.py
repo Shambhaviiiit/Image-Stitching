@@ -25,7 +25,7 @@ def intspoints(lines, imsize):
                 if isneighb([a, b], lines[i], lines[j]):
                     pointlist.append({'point': [a, b], 'lines': [i, j]})
     
-    return pointlist
+    return np.array(pointlist)
 
 def isneighb(intp, line1, line2):
     """

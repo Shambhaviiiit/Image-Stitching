@@ -44,7 +44,9 @@ def two_line_match(img1, img2, pts1, pts2, parameters):
     lines2, pointlist2 = paras(img2, lines2)
     # print("POINTLIST")
     # print(pointlist1)
-    # print(pointlist2.shape)
+    print("After paras")
+    print(lines1.shape)
+    print(pointlist1.shape)
     
     len1 = len(lines1)
     len2 = len(lines2)
@@ -55,6 +57,8 @@ def two_line_match(img1, img2, pts1, pts2, parameters):
     lines1 = addpointsnearby(lines1, pointlist1, sublinds1, pts1)
     lines2 = addpointsnearby(lines2, pointlist2, sublinds2, pts2)
     
+    print("After points nearby")
+    print(lines1.shape)
     # Initialize similarity matrices
     simL = np.zeros((len1, len2))
     simR = np.zeros((len1, len2))

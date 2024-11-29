@@ -75,8 +75,8 @@ C2 = int(np.ceil(img1.shape[1] / parameters['grid_size']))
 # Detect and match SIFT features
 pts1, pts2 = sift_match(img1, img2)
 matches_1, matches_2 = multi_sample_apap(pts1, pts2)
-print("AFTER MATCHES")
-print(matches_1)
+# print("AFTER MATCHES")
+# print(matches_1)
 
 # Detect and match line segments
 line_match1, line_match2 = two_line_match(img1, img2, matches_1, matches_2, parameters)

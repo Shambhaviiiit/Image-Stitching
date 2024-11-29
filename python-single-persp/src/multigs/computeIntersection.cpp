@@ -6,9 +6,7 @@
 namespace py = pybind11;
 
 double intersect(double* x, double* z, int pix, double param) {
-    // std::cout<<"intersect mei\n";
-    // std::cout<<
-    // Intersection Kernel - C++ version
+    
     std::vector<int> symtab(pix+1, 0);
     double accum = 0;
 
@@ -33,12 +31,8 @@ py::array_t<double> compute_intersection(py::array_t<double> A1, py::array_t<dou
     auto buf1 = A1.request();
     auto buf2 = A2.request();
 
-    std::cout << "Shape of A1: (" << buf1.shape[0] << ", " << buf1.shape[1] << ")" << std::endl;
-    std::cout << "Shape of A2: (" << buf2.shape[0] << ", " << buf2.shape[1] << ")" << std::endl;
-
     double* ptrA1 = static_cast<double*>(buf1.ptr);
     double* ptrA2 = static_cast<double*>(buf2.ptr);
-    std::cout<< "Checkpoint\n";
 
     int m1 = buf1.shape[0];
     int n1 = buf1.shape[1];
@@ -63,8 +57,6 @@ py::array_t<double> compute_intersection(py::array_t<double> A1, py::array_t<dou
         }
     }
 
-
-    std::cout << "Shape of K: (" << n1 << ", " << n2 << ")" << std::endl;
     return K;
 }
 

@@ -11,8 +11,8 @@ def distline(line1, line2):
     A tuple (simL, simR) representing similarity measures between the two lines.
     """
     # Extract points from the lines
-    x1_1, y1_1, x2_1, y2_1 = line1
-    x1_2, y1_2, x2_2, y2_2 = line2
+    x1_1, y1_1, x2_1, y2_1 = line1['point1'][0], line1['point1'][1], line1['point2'][0], line1['point2'][1]
+    x1_2, y1_2, x2_2, y2_2 = line2['point1'][0], line2['point1'][1], line2['point2'][0], line2['point2'][1]
 
     # Calculate line lengths
     length1 = np.sqrt((x2_1 - x1_1)**2 + (y2_1 - y1_1)**2)
